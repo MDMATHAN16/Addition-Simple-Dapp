@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addition </title>
+</head>
+<style>
+    *{
+        background-color: rgb(224, 30, 111);
+    }
+    div{
+        padding: 10p2;
+        margin-top: 200px;
+        height: 450px;
+        width: 500px;
+        background-color: #fff;
+        border: 2px solid #332;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 5px 5px 5px   yellow;
+    }
+    label{
+        margin-top: 15px;
+        height: 30px;
+        width: auto;
+        font-size: 24px;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #fff;
+    }
+    input{
+        height: 30px;
+        font-size: 24px; 
+        border-radius: 5px;
+        background-color: #fff;
+        font-family:  'Trebuchet MS', sans-serif;
+    }
+    button{
+
+        height: 40px;
+        width: 110px;
+        margin-top: 15px;
+        font-size: 20px;
+        background-color: purple;
+        border-radius: 5px;
+        color: white;
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+    button:hover{
+        background-color: aqua;
+        color: black;
+    }
+    #connectBtn{
+        background-color: red;
+    }
+    .result{
+        margin-top: 10px;
+        color: green;
+        font-size: 30px;
+        height: 40px;
+        background-color: #fff;
+    }
+    section{
+        margin-top: 10px;
+        background-color: #fff;
+    }
+    div > h1{
+        background-color: #fff;
+            color: blue;
+            font-size:30px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            
+            font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    h4{
+        background-color: #fff;
+        color: rgb(224, 30, 111);
+        font-size: 19px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    }
+</style>
+<body>
+    <center>
+        <div>
+            <h1>Addition of two Number</h1>
+            <label for="num1">Number1 : <input id="n1" type="number"  min="0" value="0"></label>
+            <br>
+            <label for="num1">Number2 : <input id="n2" type="number"  min="0" value="0" ></label>
+            <br>
+            <section>
+            <button type="button" onclick="add()">Add</button>
+            <button id="connectBtn"  onclick="connect()">Connect</button></section>
+            <h2 id="result" class="result"></h2>
+            
+            <h4>Designed by MD_Media :)</h4>
+        </div>
+    </center>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script>
+        let web3;
+        let contract; 
+        async function connect (){
+            if (window.ethereum) { 
+            try {
+                await window.ethereum.request({ method: "eth_requestAccounts" });
+                web3 = new Web3(window.ethereum);
+                document.getElementById('connectBtn').style.backgroundColor='green';
+                const contractAddress = "0x838D61BdE8fb96d5787C3f64c795dF4A22Df50FB";
+                const ABI =  [
+                    {
+                        "inputs": [
+                            {
+                                "internalType": "int256",
+                                "name": "a",
+                                "type": "int256"
+                            },
+                            {
+                                "internalType": "int256",
+                                "name": "b",
+                                "type": "int256"
+                            }
+                        ],
+                        "name": "addnum",
+                        "outputs": [
+                            {
+                                "internalType": "int256",
+                                "name": "",
+                                "type": "int256"
+                            }
+                        ],
+                        "stateMutability": "pure",
+                        "type": "function"
+                    }
+                    ];
+                    contract = new web3.eth.Contract(ABI, contractAddress);
+                } catch (error) {
+                    console.error(error);
+                    alert("Error connecting to Metamask!");
+                }  
+                } else {
+                alert("Please install Metamask!");
+                }
+        }
+        async function add(){
+        var v1 = document.getElementById('n1').value;
+        var v2 = document.getElementById('n2').value;
+        //document.getElementById('result').innerHTML= v1+" + "+v2+" = "+(parseInt(v1)+parseInt(v2));
+        try {
+            const add = await contract.methods.addnum(parseInt(v1),parseInt(v2)).call();
+            result.textContent =v1+" + "+v2+" = "+add;
+        } catch (error) {
+            console.error(error);
+            alert("Error in addition");
+        }
+        }
+    </script>  
+</body>
+</body>
+</html>
